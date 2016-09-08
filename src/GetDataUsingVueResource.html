@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vue.js"></script>
+    <!--<script src="http://cdn.jsdelivr.net/vue/1.0.16/vue.js"></script>-->
+    <script src="js/vue-resource.js"></script>
+
+</head>
+
+<template id="grid-template">
+    <table>
+        <thead>
+        <tr>
+            <th v-for="col in columns">
+                {{ col | capitalize}}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(index,entry) in dataList">
+            <td v-for="col in columns">
+                {{entry[col]}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</template>
+
+<div id="app">
+    <div class="container">
+        <simple-grid :data-list="gridData" :columns="gridColumns">
+        </simple-grid>
+    </div>
+</div>
+
+</body>
+
+<script>
+
+    Vue.component('simple-grid', {
+        template: '#grid-template',
+        props: ['dataList', 'columns']
+    });
+
+    new Vue({
+        el : '#app',
+        data : {
+            gridColumns: ['customerId', 'companyName', 'contactName', 'phone'],
+            gridData: [],
+            apiUrl: 'http://211.149.193.19:8080/api/customers{/id}'
+//
+        },
+        ready: function() {
+            this.getCustomers()
+        },
+        methods: {
+            getCustomers: function() {
+//                var resource = this.$resource(this.apiUrl)
+//                vm = this
+//                resource.get()
+//                        .then((response) => {
+//                            vm.$set('gridData', response.data)
+//                        })
+//                        .catch(function(response) {
+//                            console.log(response)
+//                        })
+
+                this.$resource(this.apiUrl).get()
+                        .then((response) => {
+                            this.$set('gridData', response.data)
+                        })
+                        .catch(function(response) {
+                            console.log(response)
+                        })
+            }
+        }
+    })
+</script>
+</html>

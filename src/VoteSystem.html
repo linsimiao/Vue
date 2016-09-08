@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="http://cdn.jsdelivr.net/vue/1.0.16/vue.js"></script>
+
+</head>
+<template id = "voteTpl">
+    <li>
+        <p>{{post.title}}</p>
+        <button @click="upVote" :class="{disabled : upvoted}">support</button>
+        <button @click="downVote" :class = "{disabled : downvoted}">oppose</button>
+        <span>{{post.votes}}</span>
+    </li>
+</template>
+
+<body>
+    <div id = "voteInstance">
+        <ul>
+            <post v-for="post in posts" :post="post"></post>
+        </ul>
+
+        <!--for creating more components-->
+        <div>
+            <input type="text" v-model="comment" @keyup.enter="postNewComment">
+            <button @click="postNewComment"></button>
+        </div>
+    </div>
+
+
+</body>
+
+<script>
+    Vue.component('post',{
+        template : '#voteTpl',
+        props : ['post'],
+        data : function () {
+            return {
+                upvoted : false,
+                downvoted : false,
+
+            }
+        },
+        methods:{
+            upVote : function () {
+                this.post.votes = this.post.votes + 1;
+                this.upvoted = true;
+                this.downvoted = false;
+            },
+            downVote : function () {
+                this.post.votes = this.post.votes - 1;
+                this.downvoted = true;
+                this.upvoted = false;
+            }
+        },
+    })
+
+    new Vue({
+        el : '#voteInstance',
+        data : {
+            posts:[
+                {title: "sex equality",
+                votes: 15},
+                {title: "human equality",
+                votes: 16}
+            ],
+            comment: ''
+        },
+        methods:{
+//            reusable _components
+            postNewComment : function () {
+              this.posts.push({
+                  title : this.comment,
+                  votes : 0
+              });
+              this.comment = '';
+          }
+        }
+    })
+</script>
+<style>
+    .disabled{
+        color:orange;
+    }
+</style>
+</html>
