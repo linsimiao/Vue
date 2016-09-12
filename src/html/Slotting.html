@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-resource.js"></script>
+</head>
+<body>
+    <template id = "child">
+        <div>
+            <h1>welcome to school...</h1>
+            <slot name = "one">
+                parent leave nothing to me...1
+            </slot>
+            <slot>default</slot>
+            <slot name = "two">
+                parent leave nothing to me...2
+            </slot>
+
+        </div>
+    </template>
+<div id = "father">
+    <child-tpl>
+        <p slot="one">well at least i have son</p>
+        <p slot="two">well at least i have daughter.</p>
+        <!--<p>i should not be displace.</p>-->
+    </child-tpl>
+</div>
+</body>
+
+<script>
+    Vue.component('child-tpl',{
+        template : '#child'
+    })
+
+    new Vue({
+        el : '#father',
+    })
+
+</script>
+</html>
