@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>getDetail</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../fonts/iconfont.css" />
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-resource.js"></script>
+</head>
+<body>
+    <div id="detail">
+      <div class="container">
+        <p>{{item.id}}</p>
+        <p>{{item.dockerREP}}</p>
+        <p>{{item.dockerTag}}</p>
+        <p>{{item.error}}</p>
+      </div>
+    </div>
+</body>
+</html>
+<script>
+  var vue = new Vue({
+    el : '#detail',
+    data:{
+      apiUrl: 'http://127.0.0.1:9090/jobs',
+      item : {}
+    },
+    ready: function () {
+      //后期参数多了这个可能要改
+      var id=location.search.substring(1).replace('jobId=','');
+      this.getJobDetail(id)
+    },
+    methods:{
+      getJobDetail:function (jobId) {
+        var resource = this.$resource(this.apiUrl)
+        vm = this
+        resource.get(vm.apiUrl).
+          then((response) => {
+            vm.$set('item',response.data[jobId-1])
+        })
+      }
+    }
+  })
+</script>

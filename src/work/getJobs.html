@@ -1,0 +1,89 @@
+
+<template id="grid-template">
+  <table>
+    <thead>
+    <tr>
+      <th v-for="col in columns">
+        {{ col.name}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="(index,entry) in dataList">
+      <td v-for="col in columns">
+        <span v-if="col.isKey"><a href="./getDetail.html?jobId={{entry[col.name]}}">{{entry[col.name]}}</a></span>
+        <span v-else>{{entry[col.name]}}</span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</template>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>getJobs</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../fonts/iconfont.css" />
+  <script src="../js/vue.js"></script>
+  <script src="../js/vue-resource.js"></script>
+</head>
+<body>
+  <div id="app">
+    <div class="container">
+      <simple-grid :data-list="gridData" :columns="gridColumns">
+      </simple-grid>
+    </div>
+    <div class="container">
+      <div class="form-group">
+        <a href="./createJob.html" ><button>Create</button></a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  Vue.component('simple-grid', {
+    template: '#grid-template',
+    props: ['dataList', 'columns'],
+    methods:{
+      getDetailUrl : function (jobId) {
+        return "./getDetail.html?jobId="+jobId;
+      }
+    }
+  })
+  var demo = new Vue({
+    el: '#app',
+    data: {
+      show: false,
+      gridColumns: [{
+        name: 'id',
+        isKey: true
+      }, {
+        name: 'dockerREP'
+      },{
+        name: 'dockerTag'
+      }],
+      gridData: [],
+      apiUrl: 'http://127.0.0.1:9090/jobs',
+      item: {}
+    },
+    ready: function() {
+      this.getJobs()
+    },
+    methods: {
+      getJobs: function() {
+        var resource = this.$resource(this.apiUrl)
+        vm = this
+        resource.get()
+          .then((response) => {
+            vm.$set('gridData', response.data)
+          })
+          .catch(function(response) {
+            console.log(response)
+          })
+      }
+    }
+  })
+</script>

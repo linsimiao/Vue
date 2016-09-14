@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>creatJob</title>
+    <link rel="stylesheet" href="../style.css" />
+    <link rel="stylesheet" href="../fonts/iconfont.css" />
+    <script src="../js/vue.js"></script>
+    <script src="../js/vue-resource.js"></script>
+</head>
+<body>
+<template id="dialog-template">
+  <div class="dialog dialog-active">
+    <div class="dialog-content">
+      <slot name="header"></slot>
+      <slot name="body"></slot>
+    </div>
+  </div>
+</template>
+<div id="createJob">
+  <div class="container">
+    <modal-dialog>
+      <header class="dialog-header" slot="header">
+        <h1 class="dialog-title">Create New Customer</h1>
+      </header>
+      <div class="dialog-body" slot="body">
+        <div v-show ="item.id" class="form-group">
+          <label>Job Id</label>
+          <input type="text" v-model="item.id" disabled="disabled" />
+        </div>
+        <div class="form-group">
+          <label>dockerREP</label>
+          <input type="text" v-model="item.dockerREP" />
+        </div>
+        <div class="form-group">
+          <label>dockerTag</label>
+          <input type="text" v-model="item.dockerTag" />
+        </div>
+        <div class="form-group">
+          <label></label>
+          <button @click="createJob">Create a job</button>
+        </div>
+      </div>
+    </modal-dialog>
+  </div>
+
+</div>
+</body>
+</html>
+<script>
+  Vue.component('modal-dialog', {
+    template: '#dialog-template'
+  })
+</script>
+<script>
+  var demo = new Vue({
+    el: '#createJob',
+    data: {
+      apiUrl: 'http://127.0.0.1:9090/jobs',
+      item: {}
+    },
+    methods: {
+      createJob: function() {
+
+          var resource = this.$resource(this.apiUrl)
+          vm = this
+          vm.item.error = "none"
+          resource.save(vm.apiUrl, vm.item)
+            .then((response) => {
+              vm.$set('item', {})
+              location.href = "./getJobs.html"
+            })
+
+      }
+    }
+  })
+</script>
