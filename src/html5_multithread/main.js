@@ -1,0 +1,5 @@
+var foo = require('./foo.js')
+var gamma = require('gamma')
+var element = document.getElementById('result')
+var x = foo(10)
+element.textContent = gamma(x)

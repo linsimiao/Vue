@@ -2,15 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>getDetail</title>
-    <link rel="stylesheet" href="../style.css" />
-    <link rel="stylesheet" href="../fonts/iconfont.css" />
-    <link rel="stylesheet" href="../fonts/bootstrap.min.css">
-    <script src="../js/vue.js"></script>
-    <script src="../js/vue-resource.js"></script>
-    <script src="../js/jquery-3.1.0.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+  <meta charset="UTF-8">
+  <title>getDetail</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../fonts/iconfont.css" />
+  <link rel="stylesheet" href="../fonts/bootstrap.min.css">
+  <script src="../js/vue.js"></script>
+  <script src="../js/vue-resource.js"></script>
+  <script src="../js/jquery-3.1.0.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/socket.io.js"></script>
 </head>
 <body>
     <div id="detail">
@@ -72,9 +73,6 @@
       //后期参数多了这个可能要改
       var id=location.search.substring(1).replace('jobId=','');
       this.getJobDetail(id)
-      window.setInterval(function () {
-        $.ajax(this.getJobDetail(id)),5000
-      })
     },
     methods:{
       getJobDetail:function (jobId) {
@@ -87,5 +85,27 @@
       }
     }
   })
+
+  var conn = io.connect('http://127.0.0.1:9090/jobs')
+  conn.on('connect',function () {
+    console.log("hahah finally connect...")
+  })
+  conn.on('message',function (data) {
+    console.log("receiving data:",data)
+  })
+  conn.on('disconnect',function () {
+    console.log('the connection has closed')
+  })
+//  var conn = new WebSocket('ws://localhost:9090/jobs','xmpp');
+//  conn.onopen = function () {
+//    conn.send("i am the client and i am listening...")
+//    conn.onmessage = function (e) {
+//      console.log('Server:'+e.data);
+//    }
+//    conn.onclose = function (event) {
+//      console.log("i am away now.")
+//    }
+//
+//  }
 
 </script>
