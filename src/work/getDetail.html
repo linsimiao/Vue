@@ -6,16 +6,57 @@
     <title>getDetail</title>
     <link rel="stylesheet" href="../style.css" />
     <link rel="stylesheet" href="../fonts/iconfont.css" />
+    <link rel="stylesheet" href="../fonts/bootstrap.min.css">
     <script src="../js/vue.js"></script>
     <script src="../js/vue-resource.js"></script>
+    <script src="../js/jquery-3.1.0.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
 </head>
 <body>
     <div id="detail">
       <div class="container">
-        <p>{{item.id}}</p>
-        <p>{{item.dockerREP}}</p>
-        <p>{{item.dockerTag}}</p>
-        <p>{{item.error}}</p>
+        <h1 style="margin-bottom: 20px; text-align: center">Basic</h1>
+        <hr>
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th width="20%" style="font-weight: bold">type</th>
+            <th width="80%" style="font-weight: bold">content</th>
+          </tr>
+          </thead>
+          <tr>
+            <td style="font-weight: bold">id</td>
+            <td>{{item.id}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold">dockerREP</td>
+            <td>{{item.dockerREP}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold">dockerTag</td>
+            <td>{{item.dockerTag}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold">error</td>
+            <td>{{item.error}}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold">status</td>
+            <td>{{item.status}}</td>
+          </tr>
+        </table>
+        <hr>
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>task log</th>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{item.task.log}}</td>
+          </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 </body>
@@ -31,16 +72,20 @@
       //后期参数多了这个可能要改
       var id=location.search.substring(1).replace('jobId=','');
       this.getJobDetail(id)
+      window.setInterval(function () {
+        $.ajax(this.getJobDetail(id)),5000
+      })
     },
     methods:{
       getJobDetail:function (jobId) {
-        var resource = this.$resource(this.apiUrl)
+        var resource = this.$resource(this.apiUrl+'{/id}')
         vm = this
-        resource.get(vm.apiUrl).
+        resource.get({id:jobId}).
           then((response) => {
-            vm.$set('item',response.data[jobId-1])
+            vm.$set('item',response.json())
         })
       }
     }
   })
+
 </script>
